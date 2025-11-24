@@ -84,7 +84,7 @@ const PricingCard = ({ tier, levelJP, price, period, title, description, feature
           {tier}
         </span>
         {isHighlight && (
-            <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-1 rounded tracking-wider shadow-lg shadow-blue-600/30">RECOMMENDED</span>
+            <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-1 rounded tracking-wider shadow-lg shadow-blue-600/30">おすすめ</span>
         )}
       </div>
       
@@ -336,7 +336,7 @@ export default function App() {
               <span className="text-blue-500 font-bold tracking-widest uppercase text-sm">Critical Issue</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white">
-              Why Now? <span className="text-neutral-500">企業の生存戦略として</span>
+              なぜ今? <span className="text-neutral-500">企業の生存戦略として</span>
             </h2>
             <p className="text-neutral-400 text-lg font-medium">
               技術や品質だけでは差別化できない今、<br />
@@ -386,7 +386,7 @@ export default function App() {
         <FadeIn>
           <div className="mb-24 border-b border-neutral-800 pb-10">
             <h2 className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-white">
-              Plans
+              プラン
             </h2>
             <p className="text-neutral-400 text-lg font-medium">
               契約期間に応じて最適化された3つの戦略フェーズ。
@@ -422,7 +422,7 @@ export default function App() {
             />
           </FadeIn>
 
-          {/* Plan 3: Standard (Recommended) */}
+          {/* Plan 3: Standard (おすすめ) */}
           <FadeIn delay={400} className="h-full">
             <PricingCard 
               tier="Standard"
