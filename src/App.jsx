@@ -243,7 +243,7 @@ export default function App() {
     };
 
     // 3. Set Meta Description & Keywords
-    updateMeta("description", "沖縄の企業向けにSNS運用代行・Instagram動画制作・SNS戦略設計を提供。企画から撮影・編集まで一貫対応し、集客と採用を支援します。");
+    updateMeta("description", "沖縄の中小企業・個人事業主向けにSNS運用代行・SNS戦略設計を提供。企画から撮影・編集まで一貫対応し、御社の集客と採用を支援します。");
     updateMeta("keywords", "沖縄, SNS運用代行, インスタ運用, 動画制作, 集客, 採用, TRANZIA");
 
   }, []);
