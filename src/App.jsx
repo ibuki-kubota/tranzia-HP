@@ -97,7 +97,7 @@ const PricingCard = ({ tier, levelJP, price, period, title, description, feature
       {isWebPlan && (
         <div className="mb-6 bg-gradient-to-r from-amber-200/10 to-transparent border-l-4 border-amber-400 p-3 rounded-r-lg">
           <p className="text-amber-400 font-bold text-lg tracking-wide">
-            2〜5ページ制作込み
+            1〜5ページ制作込み
           </p>
         </div>
       )}
