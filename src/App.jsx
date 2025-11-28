@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TrendingUp, Users, ShieldCheck, Check, MoveUpRight, AlertCircle, Layers, Instagram, ArrowLeft, Send, Monitor, Smartphone, Zap, Code } from 'lucide-react';
+import { TrendingUp, Users, ShieldCheck, Check, MoveUpRight, AlertCircle, Layers, Instagram, ArrowLeft, Send, Monitor, Smartphone, Zap, Code, Target, Flag } from 'lucide-react';
 
 /**
  * ==========================================
@@ -64,7 +64,7 @@ const FadeIn = ({ children, delay = 0, className = "" }) => {
 };
 
 /**
- * Component: Pricing Card (Dark Mode Optimized)
+ * Component: Pricing Card
  */
 const PricingCard = ({ tier, levelJP, price, period, title, description, features, isHighlight = false, isWebPlan = false }) => (
   <div className={`flex flex-col p-8 md:p-10 rounded-3xl border h-full transition-all duration-500 group ${
@@ -100,7 +100,6 @@ const PricingCard = ({ tier, levelJP, price, period, title, description, feature
         <span className="text-sm text-neutral-500">/月 (税別)</span>
       </div>
 
-      {/* Contract Period Highlight */}
       <div className={`flex items-center justify-between p-3 rounded-lg ${isHighlight ? "bg-blue-900/20 border border-blue-500/30" : "bg-neutral-800/50 border border-neutral-800"}`}>
         <span className="text-xs font-bold text-neutral-400">契約期間</span>
         <span className={`text-sm font-bold ${isHighlight ? "text-blue-400" : "text-white"}`}>
@@ -114,7 +113,6 @@ const PricingCard = ({ tier, levelJP, price, period, title, description, feature
         {description}
       </p>
       
-      {/* Features */}
       <div className="mt-auto">
         <div className="mb-4 text-[10px] font-bold text-neutral-600 uppercase tracking-widest border-b border-neutral-800 pb-2">
             {isWebPlan ? "Service Includes" : "All Plans Include"}
@@ -135,7 +133,7 @@ const PricingCard = ({ tier, levelJP, price, period, title, description, feature
 );
 
 /**
- * Component: Feature/Reason Card (Dark Mode)
+ * Component: Feature/Reason Card
  */
 const ReasonCard = ({ icon: Icon, title, subTitle, description }) => (
   <div className="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-10 h-full flex flex-col hover:border-neutral-600 hover:bg-neutral-800 transition-all duration-500 group">
@@ -155,7 +153,7 @@ const ReasonCard = ({ icon: Icon, title, subTitle, description }) => (
 /**
  * Component: Service Selection Card
  */
-const ServiceCard = ({ icon: Icon, title, description, onClick }) => (
+const ServiceCard = ({ icon: Icon, title, titleJP, description, onClick }) => (
   <button onClick={onClick} className="text-left w-full bg-neutral-900 border border-neutral-800 rounded-[2rem] p-10 h-full flex flex-col hover:border-blue-700 hover:bg-neutral-800/80 transition-all duration-500 group relative overflow-hidden">
     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all" />
     
@@ -164,13 +162,14 @@ const ServiceCard = ({ icon: Icon, title, description, onClick }) => (
     </div>
     
     <div className="relative z-10">
-        <h3 className="text-3xl font-bold tracking-tight text-white mb-4 group-hover:text-blue-100 transition-colors">{title}</h3>
+        <h3 className="text-3xl font-bold tracking-tight text-white mb-2 group-hover:text-blue-100 transition-colors">{title}</h3>
+        <p className="text-sm font-bold text-blue-500 mb-6 uppercase tracking-wider">{titleJP}</p>
         <p className="text-neutral-400 leading-relaxed font-medium text-sm mb-8 group-hover:text-neutral-300 transition-colors">
         {description}
         </p>
         
-        <div className="inline-flex items-center gap-2 text-sm font-bold text-blue-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all">
-        View Details <MoveUpRight className="w-4 h-4" />
+        <div className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-blue-400 group-hover:translate-x-1 transition-all">
+        詳細を見る <MoveUpRight className="w-4 h-4" />
         </div>
     </div>
   </button>
@@ -196,7 +195,7 @@ const ContactForm = ({ onBack }) => {
         </button>
         
         <div className="mb-10 border-b border-neutral-800 pb-8">
-          <h2 className="text-4xl font-bold tracking-tighter mb-4 text-white">Contact Us</h2>
+          <h2 className="text-4xl font-bold tracking-tighter mb-4 text-white">お問い合わせ</h2>
           <p className="text-neutral-400">以下のフォームに必要事項をご入力ください。<br />ご入力いただいた内容は、直接担当者へ送信されます。</p>
         </div>
 
@@ -247,8 +246,21 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'sns' | 'web' | 'contact'
 
+  // Navigation Logic
+  const handleNavClick = (sectionId) => {
+    if (currentView !== 'home') {
+      setCurrentView('home');
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
-    // SEO Settings
     document.title = "沖縄のSNS運用代行・ホームページ制作｜TRANZIA";
     const updateMeta = (name, content) => {
       let meta = document.querySelector(`meta[name="${name}"]`);
@@ -260,7 +272,7 @@ export default function App() {
       meta.content = content;
     };
     updateMeta("description", "沖縄の中小企業・店舗向けにSNS運用代行とホームページ制作を提供。企画・撮影・編集まで一貫対応し、集客と採用を支援します。");
-    updateMeta("keywords", "沖縄,SNS運用代行,インスタ運用,HP制作,ホームページ制作,集客,TRANZIA,トランジア,格安HP");
+    updateMeta("keywords", "沖縄,SNS運用代行,インスタ運用,ホームページ制作,HP制作,集客,TRANZIA,トランジア");
     updateMeta("robots", "index, follow");
   }, []);
 
@@ -281,9 +293,9 @@ export default function App() {
   ];
 
   const webFeatures = [
+    "いつでも解約OK（期間縛りなし）",
     "最短1週間でのスピード納品",
     "スマホ対応レスポンシブデザイン",
-    "基本的なSEO内部対策",
     "サーバー・ドメイン管理込み",
     "月1回のテキスト・画像修正",
     "お問い合わせフォーム実装",
@@ -298,14 +310,22 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30 selection:text-blue-200 antialiased overflow-x-hidden">
       
-      {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 md:px-12 py-6 flex justify-between items-center border-b border-transparent ${scrolled ? 'bg-[#050505]/80 backdrop-blur-md border-neutral-800' : ''}`}>
+      {/* Navigation (Updated with Tabs) */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 md:px-12 py-6 flex justify-between items-center border-b border-transparent ${scrolled ? 'bg-[#050505]/95 backdrop-blur-md border-neutral-800' : ''}`}>
         <span className="text-xl font-bold tracking-tighter flex items-center gap-1 cursor-pointer text-white" onClick={() => setCurrentView('home')}>
           TRANZIA<span className="text-blue-600">.</span>
         </span>
+        
+        {/* Navigation Tabs (Hidden on mobile for simplicity, or use simple row) */}
+        <div className="hidden md:flex items-center gap-8 text-sm font-bold tracking-wider">
+            <button onClick={() => handleNavClick('vision')} className="text-neutral-400 hover:text-white transition-colors">VISION</button>
+            <button onClick={() => handleNavClick('services')} className="text-neutral-400 hover:text-white transition-colors">SERVICES</button>
+            <button onClick={() => handleNavClick('sns-links')} className="text-neutral-400 hover:text-white transition-colors">SNS</button>
+        </div>
+
         <button 
           onClick={() => setCurrentView('contact')}
-          className="hidden md:flex items-center gap-2 text-sm font-bold bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 hover:shadow-blue-600/30"
+          className="flex items-center gap-2 text-xs md:text-sm font-bold bg-blue-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-full hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 hover:shadow-blue-600/30"
         >
           <span>無料相談を予約する</span>
           <MoveUpRight className="w-3 h-3" />
@@ -322,7 +342,7 @@ export default function App() {
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
             <video 
-                autoPlay 
+                autoPlay
                 loop 
                 muted 
                 playsInline
@@ -337,9 +357,9 @@ export default function App() {
         <div className="relative z-10">
             <FadeIn>
             <h1 className="text-[10vw] md:text-[8vw] leading-[1.1] font-bold tracking-tighter text-white mb-10">
-                沖縄の集客を、<br />
-                {currentView === 'web' ? 'Web' : 'SNS'}で<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-700">変革する。</span>
+                沖縄の事業成長を、<br />
+                デジタル戦略で<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-700">加速させる。</span>
             </h1>
             </FadeIn>
             
@@ -348,7 +368,7 @@ export default function App() {
                 <p className="text-neutral-300 max-w-xl text-lg leading-relaxed font-medium">
                 「いいモノを作れば売れる」時代は終わりました。<br />
                 どんなに良いサービスも、知られなければ「ない」のと同じです。<br />
-                <span className="text-white font-bold border-b border-blue-600 pb-0.5">デジタル戦略で認知を広げ、御社を「選ばれる」企業へと変革します。</span>
+                <span className="text-white font-bold border-b border-blue-600 pb-0.5">デジタルで認知を広げ、御社を「選ばれる」企業へと変革します。</span>
                 </p>
             </div>
             </FadeIn>
@@ -356,39 +376,75 @@ export default function App() {
       </section>
 
       {/* ================================================================
-        HOME VIEW: Service Selection 
+        HOME VIEW: Vision & Service Selection 
         ================================================================
       */}
       {currentView === 'home' && (
-        <section className="px-6 md:px-12 py-32 bg-[#050505]">
-          <FadeIn>
-            <div className="mb-20 text-center">
-              <span className="text-blue-500 font-bold tracking-widest uppercase text-sm mb-4 block">Our Services</span>
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
-                Select Your Solution
-              </h2>
-            </div>
-          </FadeIn>
+        <>
+            {/* Vision & Mission Section (New) */}
+            <section id="vision" className="px-6 md:px-12 py-32 bg-[#050505]">
+                <FadeIn>
+                    <div className="flex flex-col md:flex-row gap-16 max-w-7xl mx-auto">
+                        <div className="md:w-1/2">
+                            <span className="text-blue-500 font-bold tracking-widest uppercase text-sm mb-4 block">Our Vision</span>
+                            <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white leading-tight mb-8">
+                                デジタルの力で、<br />
+                                沖縄の可能性を解き放つ。
+                            </h2>
+                            <p className="text-neutral-400 text-lg leading-relaxed">
+                                沖縄には、世界に誇れる魅力的な企業やサービスが溢れています。<br />
+                                しかし、その価値が「伝わっていない」だけで埋もれてしまう現状があります。<br />
+                                私たちはデジタルの力を駆使し、その壁を取り払います。
+                            </p>
+                        </div>
+                        <div className="md:w-1/2 border-t md:border-t-0 md:border-l border-neutral-800 pt-10 md:pt-0 md:pl-16">
+                            <span className="text-blue-500 font-bold tracking-widest uppercase text-sm mb-4 block">Our Mission</span>
+                            <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white leading-tight mb-8">
+                                「選ばれる」必然を創る。
+                            </h2>
+                            <p className="text-neutral-400 text-lg leading-relaxed">
+                                単なる代行業者ではありません。<br />
+                                AIと共存した徹底的な分析と圧倒的なクリエイティブで、<br />
+                                御社のブランド価値を最大化し、顧客から選ばれ続ける仕組みを構築します。
+                            </p>
+                        </div>
+                    </div>
+                </FadeIn>
+            </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <FadeIn delay={0}>
-              <ServiceCard 
-                icon={TrendingUp}
-                title="SNS Operation"
-                description="InstagramやTikTokを活用したSNS運用代行。企画から撮影・編集・分析まで一気通貫でサポートし、認知拡大と採用強化を実現します。"
-                onClick={() => setCurrentView('sns')}
-              />
+            {/* Services Section */}
+            <section id="services" className="px-6 md:px-12 py-32 bg-[#0a0a0a]">
+            <FadeIn>
+                <div className="mb-20 text-center">
+                <span className="text-blue-500 font-bold tracking-widest uppercase text-sm mb-4 block">Our Services</span>
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+                    サービス一覧
+                </h2>
+                </div>
             </FadeIn>
-            <FadeIn delay={200}>
-              <ServiceCard 
-                icon={Monitor}
-                title="Web Production"
-                description="初期費用0円、月額1万円のサブスクリプション型ホームページ制作。最短1週間で納品し、サーバー管理から更新まで全てお任せいただけます。"
-                onClick={() => setCurrentView('web')}
-              />
-            </FadeIn>
-          </div>
-        </section>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <FadeIn delay={0}>
+                <ServiceCard 
+                    icon={TrendingUp}
+                    title="SNS Operation"
+                    titleJP="SNS運用代行"
+                    description="InstagramやTikTokを活用したSNS運用代行。企画から撮影・編集・分析まで一気通貫でサポートし、認知拡大と採用強化を実現します。"
+                    onClick={() => setCurrentView('sns')}
+                />
+                </FadeIn>
+                <FadeIn delay={200}>
+                <ServiceCard 
+                    icon={Monitor}
+                    title="Web Production"
+                    titleJP="格安ホームページ制作"
+                    description="初期費用0円、月額1万円のサブスクリプション型ホームページ制作。最短1週間で納品し、サーバー管理から更新まで全てお任せいただけます。"
+                    onClick={() => setCurrentView('web')}
+                />
+                </FadeIn>
+            </div>
+            </section>
+        </>
       )}
 
       {/* ================================================================
@@ -397,6 +453,15 @@ export default function App() {
       */}
       {currentView === 'sns' && (
         <div className="animate-fade-in">
+          
+          {/* Back Button (Top) */}
+          <div className="bg-[#050505] px-6 md:px-12 py-8 sticky top-20 z-40 border-b border-neutral-900">
+             <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors font-bold text-sm">
+                <ArrowLeft className="w-4 h-4" />
+                サービス一覧に戻る
+             </button>
+          </div>
+
           {/* Why SNS? (Grid Layout) */}
           <section className="px-6 md:px-12 py-32 bg-[#050505]">
             <FadeIn>
@@ -522,6 +587,14 @@ export default function App() {
       */}
       {currentView === 'web' && (
         <div className="animate-fade-in">
+           {/* Back Button (Top) */}
+           <div className="bg-[#050505] px-6 md:px-12 py-8 sticky top-20 z-40 border-b border-neutral-900">
+             <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors font-bold text-sm">
+                <ArrowLeft className="w-4 h-4" />
+                サービス一覧に戻る
+             </button>
+          </div>
+
            {/* Why Web? */}
            <section className="px-6 md:px-12 py-32 bg-[#050505]">
             <FadeIn>
@@ -543,33 +616,33 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
               <FadeIn delay={0}>
                 <ReasonCard
-                  icon={Zap}
-                  title="Speed Launch"
-                  subTitle="1 Week Delivery"
-                  description="ご契約から最短1週間で納品。ビジネスの機会を逃さず、すぐにWeb上での集客とブランディングを開始できます。"
+                  icon={Code}
+                  title="No Initial Cost"
+                  subTitle="初期費用0円"
+                  description="制作会社に支払う数十万〜数百万円の初期費用は不要です。リスクなしで、プロフェッショナルな品質のホームページを持てます。"
                 />
               </FadeIn>
               <FadeIn delay={100}>
                 <ReasonCard
-                  icon={Code}
-                  title="No Initial Cost"
-                  subTitle="Start Free"
-                  description="制作会社に払う数十万円の初期費用は不要です。リスクなしで、プロフェッショナルな品質のホームページを持てます。"
+                  icon={Target}
+                  title="Branding & Trust"
+                  subTitle="信頼・ブランディング"
+                  description="Web上の名刺として機能し、取引先や顧客への信頼性を担保。ホームページがないことによる機会損失（取りこぼし）をゼロにします。"
                 />
               </FadeIn>
               <FadeIn delay={200}>
                 <ReasonCard
-                  icon={Smartphone}
-                  title="Mobile First"
-                  subTitle="Responsive"
-                  description="スマホからの閲覧が8割を超える現代に合わせ、スマホ表示に完全対応したレスポンシブデザインを標準提供します。"
+                  icon={Flag}
+                  title="No Binding"
+                  subTitle="いつでも解約OK"
+                  description="「最低◯年契約」といった期間の縛りは一切ありません。いつでも解約可能なので、安心してスタートできます。"
                 />
               </FadeIn>
               <FadeIn delay={300}>
                 <ReasonCard
                   icon={ShieldCheck}
                   title="Maintenance Free"
-                  subTitle="All Inclusive"
+                  subTitle="完全保守管理"
                   description="サーバー管理、ドメイン更新、セキュリティ対策、月1回の修正まで全て月額費用に含まれています。"
                 />
               </FadeIn>
@@ -596,7 +669,7 @@ export default function App() {
                   levelJP="格安ホームページ制作"
                   title="Web Start"
                   price="10,000"
-                  period="1年更新"
+                  period="縛りなし"
                   description="初期費用0円、月額1万円で始めるホームページ制作。サーバー・ドメイン・保守管理まで全てコミコミの安心プラン。"
                   features={webFeatures}
                   isHighlight={true}
@@ -607,7 +680,7 @@ export default function App() {
             
             <p className="text-center text-neutral-500 text-xs mt-12 font-medium">
               ※すべての価格は税別表記です。別途消費税がかかります。<br />
-              ※最低契約期間は1年間となります。
+              ※解約は1ヶ月前申告でいつでも可能です。
             </p>
 
             <div className="mt-20 text-center">
@@ -620,7 +693,7 @@ export default function App() {
       )}
 
       {/* SNS Links Section (Common) */}
-      <section className="px-6 md:px-12 py-24 bg-[#050505] border-t border-neutral-900">
+      <section id="sns-links" className="px-6 md:px-12 py-24 bg-[#050505] border-t border-neutral-900">
         <FadeIn>
           <div className="max-w-5xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-between gap-10">
