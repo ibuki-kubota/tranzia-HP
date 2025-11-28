@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TrendingUp, Users, ShieldCheck, Check, MoveUpRight, AlertCircle, Layers, Instagram, ArrowLeft, Send } from 'lucide-react';
+import { TrendingUp, Users, ShieldCheck, Check, MoveUpRight, AlertCircle, Layers, Instagram, ArrowLeft, Send, Monitor, Smartphone, Zap, Code } from 'lucide-react';
 
 /**
  * ==========================================
@@ -66,7 +66,7 @@ const FadeIn = ({ children, delay = 0, className = "" }) => {
 /**
  * Component: Pricing Card (Dark Mode Optimized)
  */
-const PricingCard = ({ tier, levelJP, price, period, title, description, features, isHighlight = false }) => (
+const PricingCard = ({ tier, levelJP, price, period, title, description, features, isHighlight = false, isWebPlan = false }) => (
   <div className={`flex flex-col p-8 md:p-10 rounded-3xl border h-full transition-all duration-500 group ${
     isHighlight 
       ? "bg-neutral-900 border-blue-900/50 shadow-2xl shadow-blue-900/20 relative overflow-hidden translate-y-[-8px]" 
@@ -84,7 +84,7 @@ const PricingCard = ({ tier, levelJP, price, period, title, description, feature
           {tier}
         </span>
         {isHighlight && (
-            <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-1 rounded tracking-wider shadow-lg shadow-blue-600/30">おすすめ</span>
+            <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-1 rounded tracking-wider shadow-lg shadow-blue-600/30">RECOMMENDED</span>
         )}
       </div>
       
@@ -114,10 +114,10 @@ const PricingCard = ({ tier, levelJP, price, period, title, description, feature
         {description}
       </p>
       
-      {/* Common Features - Uniform Design */}
+      {/* Features */}
       <div className="mt-auto">
         <div className="mb-4 text-[10px] font-bold text-neutral-600 uppercase tracking-widest border-b border-neutral-800 pb-2">
-            All Plans Include
+            {isWebPlan ? "Service Includes" : "All Plans Include"}
         </div>
         <ul className="space-y-3">
             {features.map((feature, idx) => (
@@ -153,7 +153,31 @@ const ReasonCard = ({ icon: Icon, title, subTitle, description }) => (
 );
 
 /**
- * Component: Contact Form (Dark Mode / Formspree Integrated)
+ * Component: Service Selection Card
+ */
+const ServiceCard = ({ icon: Icon, title, description, onClick }) => (
+  <button onClick={onClick} className="text-left w-full bg-neutral-900 border border-neutral-800 rounded-[2rem] p-10 h-full flex flex-col hover:border-blue-700 hover:bg-neutral-800/80 transition-all duration-500 group relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all" />
+    
+    <div className="w-16 h-16 rounded-2xl bg-neutral-800 flex items-center justify-center mb-8 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 relative z-10">
+      <Icon className="w-8 h-8 text-neutral-400 group-hover:text-white transition-colors" />
+    </div>
+    
+    <div className="relative z-10">
+        <h3 className="text-3xl font-bold tracking-tight text-white mb-4 group-hover:text-blue-100 transition-colors">{title}</h3>
+        <p className="text-neutral-400 leading-relaxed font-medium text-sm mb-8 group-hover:text-neutral-300 transition-colors">
+        {description}
+        </p>
+        
+        <div className="inline-flex items-center gap-2 text-sm font-bold text-blue-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all">
+        View Details <MoveUpRight className="w-4 h-4" />
+        </div>
+    </div>
+  </button>
+);
+
+/**
+ * Component: Contact Form
  */
 const ContactForm = ({ onBack }) => {
   const handleSubmit = (e) => {
@@ -221,17 +245,11 @@ const ContactForm = ({ onBack }) => {
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
-  const [currentView, setCurrentView] = useState('home'); // 'home' | 'contact'
+  const [currentView, setCurrentView] = useState('home'); // 'home' | 'sns' | 'web' | 'contact'
 
-  /**
-   * SEO Implementation (Modification 1)
-   * App mounts -> Set document title and inject meta tags
-   */
   useEffect(() => {
-    // 1. Set Title
-    document.title = "沖縄のSNS運用代行｜TRANZIA（トランジア）";
-
-    // 2. Helper function to create/update meta tags
+    // SEO Settings
+    document.title = "沖縄のSNS運用代行・ホームページ制作｜TRANZIA";
     const updateMeta = (name, content) => {
       let meta = document.querySelector(`meta[name="${name}"]`);
       if (!meta) {
@@ -241,11 +259,9 @@ export default function App() {
       }
       meta.content = content;
     };
-
-    // 3. Set Meta Description & Keywords
-    updateMeta("description", "沖縄の中小企業・個人事業主向けにSNS運用代行・SNS戦略設計を提供。企画から撮影・編集まで一貫対応し、御社の集客と採用を支援します。");
-    updateMeta("keywords", "沖縄, SNS運用代行, インスタ運用, 動画制作, 集客, 採用, TRANZIA");
-
+    updateMeta("description", "沖縄の中小企業・店舗向けにSNS運用代行とホームページ制作を提供。企画・撮影・編集まで一貫対応し、集客と採用を支援します。");
+    updateMeta("keywords", "沖縄,SNS運用代行,インスタ運用,HP制作,ホームページ制作,集客,TRANZIA,トランジア,格安HP");
+    updateMeta("robots", "index, follow");
   }, []);
 
   useEffect(() => {
@@ -254,7 +270,7 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const commonFeatures = [
+  const snsFeatures = [
     "企画・撮影・編集まで一貫対応",
     "アカウント設計・プロフィール最適化",
     "競合分析・ターゲット戦略策定",
@@ -264,7 +280,17 @@ export default function App() {
     "チャットサポート"
   ];
 
-  // Render Contact Form if view is 'contact'
+  const webFeatures = [
+    "最短1週間でのスピード納品",
+    "スマホ対応レスポンシブデザイン",
+    "基本的なSEO内部対策",
+    "サーバー・ドメイン管理込み",
+    "月1回のテキスト・画像修正",
+    "お問い合わせフォーム実装",
+    "SSLセキュリティ対応"
+  ];
+
+  // Return Contact Form
   if (currentView === 'contact') {
     return <ContactForm onBack={() => setCurrentView('home')} />;
   }
@@ -274,7 +300,7 @@ export default function App() {
       
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 md:px-12 py-6 flex justify-between items-center border-b border-transparent ${scrolled ? 'bg-[#050505]/80 backdrop-blur-md border-neutral-800' : ''}`}>
-        <span className="text-xl font-bold tracking-tighter flex items-center gap-1 cursor-pointer text-white" onClick={() => window.scrollTo(0, 0)}>
+        <span className="text-xl font-bold tracking-tighter flex items-center gap-1 cursor-pointer text-white" onClick={() => setCurrentView('home')}>
           TRANZIA<span className="text-blue-600">.</span>
         </span>
         <button 
@@ -286,8 +312,13 @@ export default function App() {
         </button>
       </nav>
 
-      {/* Hero Section with LUXURY Video Background */}
+      {/* Hero Section (Common) */}
       <section className="relative min-h-[85vh] flex flex-col justify-center px-6 md:px-12 pt-20 overflow-hidden">
+        {/* Invisible SEO h1 */}
+        <h1 style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
+          沖縄のSNS運用代行・ホームページ制作｜TRANZIA
+        </h1>
+
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
             <video 
@@ -297,20 +328,17 @@ export default function App() {
                 playsInline
                 className="w-full h-full object-cover opacity-60 grayscale-[0.5]"
             >
-                {/* High-end modern architecture / night city lights */}
                 <source src="https://videos.pexels.com/video-files/3121459/3121459-uhd_2560_1440_24fps.mp4" type="video/mp4" />
             </video>
-            {/* Black Overlay for Premium Feel & Readability */}
             <div className="absolute inset-0 bg-black/60"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
         </div>
 
         <div className="relative z-10">
             <FadeIn>
-            {/* Modification 2: Hero Copy optimized for Japanese SEO & Impact */}
             <h1 className="text-[10vw] md:text-[8vw] leading-[1.1] font-bold tracking-tighter text-white mb-10">
                 沖縄の集客を、<br />
-                SNSで<br />
+                {currentView === 'web' ? 'Web' : 'SNS'}で<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-700">変革する。</span>
             </h1>
             </FadeIn>
@@ -320,158 +348,302 @@ export default function App() {
                 <p className="text-neutral-300 max-w-xl text-lg leading-relaxed font-medium">
                 「いいモノを作れば売れる」時代は終わりました。<br />
                 どんなに良いサービスも、知られなければ「ない」のと同じです。<br />
-                <span className="text-white font-bold border-b border-blue-600 pb-0.5">SNSで認知を広げ、御社を「選ばれる」企業へと変革します。</span>
+                <span className="text-white font-bold border-b border-blue-600 pb-0.5">デジタル戦略で認知を広げ、御社を「選ばれる」企業へと変革します。</span>
                 </p>
             </div>
             </FadeIn>
         </div>
       </section>
 
-      {/* Why SNS? (Grid Layout) */}
-      <section className="px-6 md:px-12 py-32 bg-[#050505]">
-        <FadeIn>
-          <div className="mb-20 max-w-4xl">
-            <div className="flex items-center gap-2 mb-4">
-              <AlertCircle className="w-6 h-6 text-blue-500" />
-              <span className="text-blue-500 font-bold tracking-widest uppercase text-sm">Critical Issue</span>
+      {/* ================================================================
+        HOME VIEW: Service Selection 
+        ================================================================
+      */}
+      {currentView === 'home' && (
+        <section className="px-6 md:px-12 py-32 bg-[#050505]">
+          <FadeIn>
+            <div className="mb-20 text-center">
+              <span className="text-blue-500 font-bold tracking-widest uppercase text-sm mb-4 block">Our Services</span>
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+                Select Your Solution
+              </h2>
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white">
-              なぜ今? <span className="text-neutral-500">企業の生存戦略として</span>
-            </h2>
-            <p className="text-neutral-400 text-lg font-medium">
-              技術や品質だけでは差別化できない今、<br />
-              SNSを持たないことは「機会損失」ではなく「リスク」そのものです。
-            </p>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <FadeIn delay={0}>
+              <ServiceCard 
+                icon={TrendingUp}
+                title="SNS Operation"
+                description="InstagramやTikTokを活用したSNS運用代行。企画から撮影・編集・分析まで一気通貫でサポートし、認知拡大と採用強化を実現します。"
+                onClick={() => setCurrentView('sns')}
+              />
+            </FadeIn>
+            <FadeIn delay={200}>
+              <ServiceCard 
+                icon={Monitor}
+                title="Web Production"
+                description="初期費用0円、月額1万円のサブスクリプション型ホームページ制作。最短1週間で納品し、サーバー管理から更新まで全てお任せいただけます。"
+                onClick={() => setCurrentView('web')}
+              />
+            </FadeIn>
           </div>
-        </FadeIn>
+        </section>
+      )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-          <FadeIn delay={0}>
-            <ReasonCard
-              icon={Users}
-              title="求人費用の削減・採用強化"
-              subTitle="Recruiting"
-              description="今の求職者は、HPよりも先にSNSを見ます。働く人の顔が見えない企業は選択肢に入りません。SNSはコストをかけず、熱量の高い人材を引き寄せる最強の採用ツールになります。"
-            />
-          </FadeIn>
-          <FadeIn delay={100}>
-            <ReasonCard
-              icon={ShieldCheck}
-              title="信頼と透明性の証明"
-              subTitle="Trust & Transparency"
-              description="更新の止まったHPは、逆に不信感を与えます。リアルタイムに動いているSNSこそが「今、活動している」という証明になり、顧客や取引先への信頼構築に直結します。"
-            />
-          </FadeIn>
-          <FadeIn delay={200}>
-            <ReasonCard
-              icon={TrendingUp}
-              title="脱・下請け体質"
-              subTitle="Direct Business"
-              description="認知が広がれば、仕事は「待つ」ものから「選ぶ」ものへ。元請け企業やエンドユーザーからの直接指名を増やし、利益率の高い案件を獲得できる体質へ改善します。"
-            />
-          </FadeIn>
-          <FadeIn delay={300}>
-            <ReasonCard
-              icon={Layers}
-              title="広告は消費、SNSは資産"
-              subTitle="Stock Asset"
-              description="広告費を止めれば集客も止まりますが、SNSで積み上げたフォロワーとコンテンツは消えません。将来にわたって集客し続ける、御社だけの「資産」となります。"
-            />
-          </FadeIn>
-        </div>
-      </section>
+      {/* ================================================================
+        SNS VIEW: Details 
+        ================================================================
+      */}
+      {currentView === 'sns' && (
+        <div className="animate-fade-in">
+          {/* Why SNS? (Grid Layout) */}
+          <section className="px-6 md:px-12 py-32 bg-[#050505]">
+            <FadeIn>
+              <div className="mb-20 max-w-4xl">
+                <div className="flex items-center gap-2 mb-4">
+                  <AlertCircle className="w-6 h-6 text-blue-500" />
+                  <span className="text-blue-500 font-bold tracking-widest uppercase text-sm">SNS Operation</span>
+                </div>
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white">
+                  Why Now? <span className="text-neutral-500">企業の生存戦略として</span>
+                </h2>
+                <p className="text-neutral-400 text-lg font-medium">
+                  技術や品質だけでは差別化できない今、<br />
+                  SNSを持たないことは「機会損失」ではなく「リスク」そのものです。
+                </p>
+              </div>
+            </FadeIn>
 
-      {/* Pricing Section */}
-      <section className="px-6 md:px-12 py-32 bg-[#0a0a0a]" id="pricing">
-        <FadeIn>
-          <div className="mb-24 border-b border-neutral-800 pb-10">
-            <h2 className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-white">
-              プラン
-            </h2>
-            <p className="text-neutral-400 text-lg font-medium">
-              契約期間に応じて最適化された3つの戦略フェーズ。
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
+              <FadeIn delay={0}>
+                <ReasonCard
+                  icon={Users}
+                  title="求人費用の削減・採用強化"
+                  subTitle="Recruiting"
+                  description="今の求職者は、HPよりも先にSNSを見ます。働く人の顔が見えない企業は選択肢に入りません。SNSはコストをかけず、熱量の高い人材を引き寄せる最強の採用ツールになります。"
+                />
+              </FadeIn>
+              <FadeIn delay={100}>
+                <ReasonCard
+                  icon={ShieldCheck}
+                  title="信頼と透明性の証明"
+                  subTitle="Trust & Transparency"
+                  description="更新の止まったHPは、逆に不信感を与えます。リアルタイムに動いているSNSこそが「今、活動している」という証明になり、顧客や取引先への信頼構築に直結します。"
+                />
+              </FadeIn>
+              <FadeIn delay={200}>
+                <ReasonCard
+                  icon={TrendingUp}
+                  title="脱・下請け体質"
+                  subTitle="Direct Business"
+                  description="認知が広がれば、仕事は「待つ」ものから「選ぶ」ものへ。元請け企業やエンドユーザーからの直接指名を増やし、利益率の高い案件を獲得できる体質へ改善します。"
+                />
+              </FadeIn>
+              <FadeIn delay={300}>
+                <ReasonCard
+                  icon={Layers}
+                  title="広告は消費、SNSは資産"
+                  subTitle="Stock Asset"
+                  description="広告費を止めれば集客も止まりますが、SNSで積み上げたフォロワーとコンテンツは消えません。将来にわたって集客し続ける、御社だけの「資産」となります。"
+                />
+              </FadeIn>
+            </div>
+          </section>
+
+          {/* Pricing Section */}
+          <section className="px-6 md:px-12 py-32 bg-[#0a0a0a]" id="pricing">
+            <FadeIn>
+              <div className="mb-24 border-b border-neutral-800 pb-10">
+                <h2 className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-white">
+                  SNS Plans
+                </h2>
+                <p className="text-neutral-400 text-lg font-medium">
+                  契約期間に応じて最適化された3つの戦略フェーズ。
+                </p>
+              </div>
+            </FadeIn>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch">
+              
+              <FadeIn delay={0} className="h-full">
+                <PricingCard 
+                  tier="Trial"
+                  levelJP="短期検証・導入"
+                  title="Trial"
+                  price="300,000"
+                  period="1ヶ月（単月）"
+                  description="単月契約でリスクを最小化。運用フローの確認と、市場の初期反応をテストするフェーズ。"
+                  features={snsFeatures}
+                />
+              </FadeIn>
+
+              <FadeIn delay={200} className="h-full">
+                <PricingCard 
+                  tier="Core"
+                  levelJP="基盤構築・定着"
+                  title="Core"
+                  price="250,000"
+                  period="最低3ヶ月"
+                  description="Trialより本格的、Standardへの足がかりとなる中間プラン。数字が動き始める3ヶ月間で確実な運用基盤を築きます。"
+                  features={snsFeatures}
+                />
+              </FadeIn>
+
+              <FadeIn delay={400} className="h-full">
+                <PricingCard 
+                  tier="Standard"
+                  levelJP="資産化・成果最大化"
+                  title="Standard"
+                  price="200,000"
+                  period="最低6ヶ月"
+                  description="最も推奨される本命プラン。十分な期間をかけて分析と改善を繰り返し、投資対効果（ROI）を最大化します。"
+                  isHighlight={true}
+                  features={snsFeatures}
+                />
+              </FadeIn>
+            </div>
+            <p className="text-center text-neutral-500 text-xs mt-12 font-medium">
+              ※すべての価格は税別表記です。別途消費税がかかります。
             </p>
-          </div>
-        </FadeIn>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch">
-          
-          {/* Plan 1: Trial */}
-          <FadeIn delay={0} className="h-full">
-            <PricingCard 
-              tier="Trial"
-              levelJP="短期検証・導入"
-              title="Trial"
-              price="300,000"
-              period="1ヶ月（単月）"
-              description="単月契約でリスクを最小化。運用フローの確認と、市場の初期反応をテストするフェーズ。"
-              features={commonFeatures}
-            />
-          </FadeIn>
-
-          {/* Plan 2: Core */}
-          <FadeIn delay={200} className="h-full">
-            <PricingCard 
-              tier="Core"
-              levelJP="基盤構築・定着"
-              title="Core"
-              price="250,000"
-              period="最低3ヶ月"
-              description="Trialより本格的、Standardへの足がかりとなる中間プラン。数字が動き始める3ヶ月間で確実な基盤を築きます。"
-              features={commonFeatures}
-            />
-          </FadeIn>
-
-          {/* Plan 3: Standard (おすすめ) */}
-          <FadeIn delay={400} className="h-full">
-            <PricingCard 
-              tier="Standard"
-              levelJP="資産化・成果最大化"
-              title="Standard"
-              price="200,000"
-              period="最低6ヶ月"
-              description="最も推奨される本命プラン。十分な期間をかけて分析と改善を繰り返し、投資対効果（ROI）を最大化します。"
-              isHighlight={true}
-              features={commonFeatures}
-            />
-          </FadeIn>
+            
+            <div className="mt-20 text-center">
+              <button onClick={() => setCurrentView('home')} className="text-neutral-500 hover:text-white transition-colors underline underline-offset-4">
+                サービス一覧に戻る
+              </button>
+            </div>
+          </section>
         </div>
-        <p className="text-center text-neutral-500 text-xs mt-12 font-medium">
-          ※すべての価格は税別表記です。別途消費税がかかります。
-        </p>
-      </section>
+      )}
 
-      {/* SNS Links Section (Refined - Smaller & Elegant) */}
+      {/* ================================================================
+        WEB VIEW: Details (New Service)
+        ================================================================
+      */}
+      {currentView === 'web' && (
+        <div className="animate-fade-in">
+           {/* Why Web? */}
+           <section className="px-6 md:px-12 py-32 bg-[#050505]">
+            <FadeIn>
+              <div className="mb-20 max-w-4xl">
+                <div className="flex items-center gap-2 mb-4">
+                  <Monitor className="w-6 h-6 text-blue-500" />
+                  <span className="text-blue-500 font-bold tracking-widest uppercase text-sm">Web Production</span>
+                </div>
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white">
+                  Subscription <span className="text-neutral-500">Model</span>
+                </h2>
+                <p className="text-neutral-400 text-lg font-medium">
+                  「ホームページは高い」「作るのに時間がかかる」という常識を覆す。<br />
+                  初期費用ゼロ、月額1万円のサブスクリプション型Web制作。
+                </p>
+              </div>
+            </FadeIn>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
+              <FadeIn delay={0}>
+                <ReasonCard
+                  icon={Zap}
+                  title="Speed Launch"
+                  subTitle="1 Week Delivery"
+                  description="ご契約から最短1週間で納品。ビジネスの機会を逃さず、すぐにWeb上での集客とブランディングを開始できます。"
+                />
+              </FadeIn>
+              <FadeIn delay={100}>
+                <ReasonCard
+                  icon={Code}
+                  title="No Initial Cost"
+                  subTitle="Start Free"
+                  description="制作会社に払う数十万円の初期費用は不要です。リスクなしで、プロフェッショナルな品質のホームページを持てます。"
+                />
+              </FadeIn>
+              <FadeIn delay={200}>
+                <ReasonCard
+                  icon={Smartphone}
+                  title="Mobile First"
+                  subTitle="Responsive"
+                  description="スマホからの閲覧が8割を超える現代に合わせ、スマホ表示に完全対応したレスポンシブデザインを標準提供します。"
+                />
+              </FadeIn>
+              <FadeIn delay={300}>
+                <ReasonCard
+                  icon={ShieldCheck}
+                  title="Maintenance Free"
+                  subTitle="All Inclusive"
+                  description="サーバー管理、ドメイン更新、セキュリティ対策、月1回の修正まで全て月額費用に含まれています。"
+                />
+              </FadeIn>
+            </div>
+          </section>
+
+          {/* Web Pricing Section */}
+          <section className="px-6 md:px-12 py-32 bg-[#0a0a0a]" id="pricing">
+            <FadeIn>
+              <div className="mb-24 border-b border-neutral-800 pb-10">
+                <h2 className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-white">
+                  Web Plan
+                </h2>
+                <p className="text-neutral-400 text-lg font-medium">
+                  シンプルで分かりやすい、ワンプラン。
+                </p>
+              </div>
+            </FadeIn>
+
+            <div className="max-w-md mx-auto">
+              <FadeIn delay={0} className="h-full">
+                <PricingCard 
+                  tier="Subscription"
+                  levelJP="格安ホームページ制作"
+                  title="Web Start"
+                  price="10,000"
+                  period="1年更新"
+                  description="初期費用0円、月額1万円で始めるホームページ制作。サーバー・ドメイン・保守管理まで全てコミコミの安心プラン。"
+                  features={webFeatures}
+                  isHighlight={true}
+                  isWebPlan={true}
+                />
+              </FadeIn>
+            </div>
+            
+            <p className="text-center text-neutral-500 text-xs mt-12 font-medium">
+              ※すべての価格は税別表記です。別途消費税がかかります。<br />
+              ※最低契約期間は1年間となります。
+            </p>
+
+            <div className="mt-20 text-center">
+              <button onClick={() => setCurrentView('home')} className="text-neutral-500 hover:text-white transition-colors underline underline-offset-4">
+                サービス一覧に戻る
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* SNS Links Section (Common) */}
       <section className="px-6 md:px-12 py-24 bg-[#050505] border-t border-neutral-900">
         <FadeIn>
           <div className="max-w-5xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-              
               <div className="mb-8 md:mb-0 md:w-1/3">
                 <h2 className="text-3xl font-bold tracking-tighter mb-3 text-white">Official SNS</h2>
                 <p className="text-neutral-500 text-sm">最新情報や実績をチェック</p>
               </div>
-              
               <div className="flex gap-6 md:w-1/2 justify-start md:justify-end">
-                {/* Instagram - Smaller Size */}
                 <a href="https://www.instagram.com/itachi_okinawa/" target="_blank" rel="noopener noreferrer" className="group relative bg-neutral-900 border border-neutral-800 rounded-2xl w-40 h-40 flex flex-col items-center justify-center p-6 transition-all hover:border-neutral-600 hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-900/20">
                   <Instagram className="w-10 h-10 text-neutral-400 group-hover:text-pink-500 transition-colors mb-4" />
                   <span className="text-sm font-bold text-neutral-300 group-hover:text-white">Instagram</span>
                 </a>
-
-                {/* X (Twitter) - Smaller Size */}
                 <a href="https://x.com/IbukiKubot33" target="_blank" rel="noopener noreferrer" className="group relative bg-neutral-900 border border-neutral-800 rounded-2xl w-40 h-40 flex flex-col items-center justify-center p-6 transition-all hover:border-neutral-600 hover:-translate-y-1 hover:shadow-lg hover:shadow-white/10">
                   <XIcon className="w-10 h-10 text-neutral-400 group-hover:text-white transition-colors mb-4" />
                   <span className="text-sm font-bold text-neutral-300 group-hover:text-white">X (Twitter)</span>
                 </a>
               </div>
-
             </div>
           </div>
         </FadeIn>
       </section>
 
-      {/* Footer Statement & Contact Trigger */}
+      {/* Footer (Common) */}
       <footer className="px-6 md:px-12 pt-24 pb-12 border-t border-neutral-900 bg-[#050505]">
         <FadeIn>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-20">
@@ -493,8 +665,6 @@ export default function App() {
               </button>
             </div>
           </div>
-
-          {/* Footer Bottom */}
           <div className="border-t border-neutral-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <span className="text-neutral-600 text-sm font-bold tracking-wider">© 2025 TRANZIA Inc.</span>
           </div>
