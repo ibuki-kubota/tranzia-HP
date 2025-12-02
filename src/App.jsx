@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TrendingUp, Users, ShieldCheck, Check, MoveUpRight, AlertCircle, Layers, Instagram, ArrowLeft, Send, Monitor, Smartphone, Zap, Code, Target, Flag } from 'lucide-react';
+import { TrendingUp, Users, ShieldCheck, Check, MoveUpRight, AlertCircle, Layers, Instagram, ArrowLeft, Send, Monitor, Smartphone, Zap, Code, Target, Flag, Menu, X } from 'lucide-react';
 
 /**
  * ==========================================
@@ -252,17 +252,36 @@ const ContactForm = ({ onBack }) => {
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [currentView, setCurrentView] = useState('home'); 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Mobile Menu State
 
-  // 修正点: 任意のID位置へスクロール付きで遷移する関数
+  // スマホメニュー開閉時のスクロールロック
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'; // 背景固定
+    } else {
+      document.body.style.overflow = ''; // 解除
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  // 任意のID位置へスクロール付きで遷移する関数
   const transitionTo = (viewName, targetId) => {
+    setIsMobileMenuOpen(false); // Close menu on transition
     setCurrentView(viewName);
+    
     setTimeout(() => {
       if (targetId === 'top') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         const element = document.getElementById(targetId);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Offset to ensure the section is not hidden behind the header
+          // スマホの場合はヘッダー分の高さを少し多めに考慮
+          const yOffset = -80; 
+          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({top: y, behavior: 'smooth'});
         }
       }
     }, 100); // 描画待ち
@@ -273,8 +292,13 @@ export default function App() {
     if (currentView !== 'home') {
       transitionTo('home', sectionId);
     } else {
+      setIsMobileMenuOpen(false); // Close mobile menu
       const element = document.getElementById(sectionId);
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
+      if (element) {
+        const yOffset = -80;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({top: y, behavior: 'smooth'});
+      }
     }
   };
 
@@ -331,38 +355,70 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30 selection:text-blue-200 antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30 selection:text-blue-200 antialiased overflow-x-hidden relative">
       
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 md:px-12 py-6 flex justify-between items-center border-b border-transparent ${scrolled ? 'bg-[#050505]/95 backdrop-blur-md border-neutral-800' : ''}`}>
-        <span className="text-xl font-bold tracking-tighter flex items-center gap-1 cursor-pointer text-white" onClick={() => transitionTo('home', 'top')}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 md:px-12 py-5 flex justify-between items-center border-b border-transparent ${scrolled ? 'bg-[#050505]/95 backdrop-blur-md border-neutral-800' : ''}`}>
+        <span className="text-xl font-bold tracking-tighter flex items-center gap-1 cursor-pointer text-white relative z-50" onClick={() => transitionTo('home', 'top')}>
           TRANZIA<span className="text-blue-600">.</span>
         </span>
         
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8 text-sm font-bold tracking-wider">
             <button onClick={() => handleNavClick('vision')} className="text-neutral-400 hover:text-white transition-colors">VISION</button>
             <button onClick={() => handleNavClick('services')} className="text-neutral-400 hover:text-white transition-colors">SERVICES</button>
             <button onClick={() => handleNavClick('sns-links')} className="text-neutral-400 hover:text-white transition-colors">SNS</button>
         </div>
 
-        <button 
-          onClick={() => transitionTo('contact', 'top')}
-          className="flex items-center gap-2 text-xs md:text-sm font-bold bg-blue-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-full hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 hover:shadow-blue-600/30"
-        >
-          <span>無料相談を予約する</span>
-          <MoveUpRight className="w-3 h-3" />
-        </button>
+        {/* Desktop CTA */}
+        <div className="hidden md:block">
+            <button 
+            onClick={() => transitionTo('contact', 'top')}
+            className="flex items-center gap-2 text-sm font-bold bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 hover:shadow-blue-600/30"
+            >
+            <span>無料相談を予約する</span>
+            <MoveUpRight className="w-3 h-3" />
+            </button>
+        </div>
+
+        {/* Mobile Menu Button (Hamburger) */}
+        <div className="md:hidden relative z-[110]">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-white">
+                {isMobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+            </button>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        {/* 修正: 完全不透明(bg-[#050505])、z-index[100]で最前面固定 */}
+        {isMobileMenuOpen && (
+            <div className="fixed inset-0 bg-[#050505] z-[100] flex flex-col items-center justify-center h-screen w-screen touch-none">
+                <div className="flex flex-col gap-10 text-center">
+                    <button onClick={() => handleNavClick('vision')} className="text-3xl font-bold text-white hover:text-blue-500 transition-colors">VISION</button>
+                    <button onClick={() => handleNavClick('services')} className="text-3xl font-bold text-white hover:text-blue-500 transition-colors">SERVICES</button>
+                    <button onClick={() => handleNavClick('sns-links')} className="text-3xl font-bold text-white hover:text-blue-500 transition-colors">SNS</button>
+                    <button 
+                        onClick={() => transitionTo('contact', 'top')}
+                        className="mt-4 flex items-center gap-2 text-xl font-bold bg-blue-600 text-white px-10 py-5 rounded-full shadow-lg shadow-blue-900/40"
+                    >
+                        <span>無料相談を予約する</span>
+                        <MoveUpRight className="w-6 h-6" />
+                    </button>
+                </div>
+            </div>
+        )}
       </nav>
 
       {/* Hero Section (Common) */}
       <section className="relative min-h-[85vh] flex flex-col justify-center px-6 md:px-12 pt-20 overflow-hidden">
+        {/* Invisible SEO h1 */}
         <h1 style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
           沖縄のSNS運用代行・ホームページ制作｜TRANZIA
         </h1>
 
+        {/* 修正: 動画背景の復活 */}
         <div className="absolute inset-0 z-0">
             <video 
-                autoPlay
+                autoPlay 
                 loop 
                 muted 
                 playsInline
@@ -370,6 +426,7 @@ export default function App() {
             >
                 <source src="https://videos.pexels.com/video-files/3121459/3121459-uhd_2560_1440_24fps.mp4" type="video/mp4" />
             </video>
+            {/* Black Overlay for Premium Feel & Readability */}
             <div className="absolute inset-0 bg-black/60"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
         </div>
