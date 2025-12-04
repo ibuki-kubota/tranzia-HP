@@ -302,28 +302,6 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
-    document.title = "沖縄のSNS運用代行・ホームページ制作｜TRANZIA";
-    const updateMeta = (name, content) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.name = name;
-        document.head.appendChild(meta);
-      }
-      meta.content = content;
-    };
-    updateMeta("description", "沖縄の中小企業・店舗向けにSNS運用代行とホームページ制作を提供。企画・撮影・編集まで一貫対応し、集客と採用を支援します。");
-    updateMeta("keywords", "沖縄,SNS運用代行,インスタ運用,ホームページ制作,HP制作,集客,TRANZIA,トランジア,格安HP");
-    updateMeta("robots", "index, follow");
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const snsFeatures = [
     "企画・撮影・編集まで一貫対応",
     "アカウント設計・プロフィール最適化",
