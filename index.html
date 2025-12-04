@@ -1,13 +1,59 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja" prefix="og: http://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
+    
+    <!-- ファビコン（既存の設定を維持） -->
     <link rel="icon" type="image/png" href="/tranzia-logo1.png" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tranzia-landing</title>
+
+    <!-- ▼▼▼ ここからSEO・OGP設定（追加・修正箇所） ▼▼▼ -->
+    
+    <!-- 1. 検索結果に表示されるタイトルと説明文 -->
+    <title>沖縄のSNS運用代行・ホームページ制作｜TRANZIA（トランジア）</title>
+    <meta name="description" content="【初期費用0円・月額8000円】沖縄の中小企業・個人事業主のSNS運用代行とホームページ制作。企画・撮影・編集から集客まで一貫対応。最短3日で納品可能なサブスク型Web制作も提供。" />
+
+    <!-- 2. SNSシェア時の表示設定 (OGP) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.trazia-okinawa.com/" />
+    <meta property="og:title" content="沖縄のSNS運用代行・ホームページ制作｜TRANZIA" />
+    <meta property="og:description" content="沖縄で「選ばれる」企業へ。SNS運用と格安HP制作で、集客と採用の課題を解決します。" />
+    <meta property="og:site_name" content="TRANZIA" />
+    <!-- シェア時の画像（Unsplashの高級感ある画像を設定中） -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" />
+
+    <!-- 3. Twitter (X) カード設定 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="沖縄のSNS運用代行・ホームページ制作｜TRANZIA" />
+    <meta name="twitter:description" content="初期費用0円で始めるWeb戦略。沖縄のビジネスを加速させます。" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" />
+
+    <!-- 4. 構造化データ (Googleに地域ビジネスとして認識させる最強の設定) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "TRANZIA",
+      "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
+      "@id": "https://www.trazia-okinawa.com/",
+      "url": "https://www.trazia-okinawa.com/",
+      "telephone": "", 
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "沖縄県",
+        "addressCountry": "JP"
+      },
+      "priceRange": "¥8000〜",
+      "description": "沖縄県の中小企業向けSNS運用代行およびホームページ制作サービス。初期費用無料のプランあり。"
+    }
+    </script>
+    <!-- ▲▲▲ ここまでSEO設定 ▲▲▲ -->
+
   </head>
   <body>
     <div id="root"></div>
+    <!-- Viteのエントリーポイント（ここは絶対に変更しない） -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
